@@ -92,9 +92,6 @@ export default {
       this.snackbar = true;
       this.snackbarText = "Your Ad is up and running successfully!";
       this.$refs.form.reset();
-      // for (let i in this.formData) {
-      //   this.formData[i] = "";
-      // }
     },
     submitFormFail() {
       this.loadingIcon = false;

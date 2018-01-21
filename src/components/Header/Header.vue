@@ -7,11 +7,18 @@
       >Car Share App</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <!-- <my-login v-if="loginStatus===false"></my-login>
-        <my-signup v-if="loginStatus===false"></my-signup> -->
-        <v-btn @click="loginAuthZero" class="orange" v-if="loginStatus===false">Login</v-btn>
-        <v-btn @click="signupAuthZero" class="orange" v-if="loginStatus===false">Signup</v-btn>
-
+        <v-btn 
+        @click="loginAuthZero" 
+        class="orange mr-2" 
+        v-if="loginStatus===false"
+        >Login
+        </v-btn>
+        <v-btn 
+        @click="signupAuthZero" 
+        class="orange" 
+        v-if="loginStatus===false"
+        >Signup
+        </v-btn>
         <v-flex v-for="item in headerOptions" :key="item.text" v-if="loginStatus===true">
           <v-btn 
           large class="orange" 
