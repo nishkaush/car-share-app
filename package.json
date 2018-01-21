@@ -13,7 +13,9 @@
   "dependencies": {
     "amazon-cognito-identity-js": "^1.31.0",
     "auth0-js": "^9.1.0",
+    "auth0-lock": "^11.1.0",
     "axios": "^0.17.1",
+    "jwt-decode": "^2.2.0",
     "normalize.css": "^7.0.0",
     "uuid": "^3.2.1",
     "vue": "^2.5.13",

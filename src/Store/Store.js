@@ -2,30 +2,13 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { CognitoUserPool } from "amazon-cognito-identity-js";
 import axios from "axios";
-
+import { sessionIsValid } from "./../utils/utils";
 Vue.use(Vuex);
 
-let loggedInValue = false;
-const pool = new CognitoUserPool({
-  UserPoolId: "ap-southeast-2_SMaYUs6PN",
-  ClientId: "4mfl593orj04rjg67m2i5j715n"
-});
-let cognitoUser = pool.getCurrentUser();
-loggedInValue = cognitoUser ? sessionIsValid(cognitoUser) : loggedInValue;
-
-export function sessionIsValid(user) {
-  return user.getSession((err, session) => {
-    if (err) {
-      return console.log("error while fetching session", err);
-    }
-    return session.isValid() ? true : false;
-  });
-}
-
+let loggedInValue = sessionIsValid() ? true : false;
 export const store = new Vuex.Store({
   state: {
     loggedIn: loggedInValue,
-    myPool: pool,
     adsArr: [
       { to: "lol", from: "lamo", adId: "343423vdfdsf", travelDate: "1-1-1" },
       { to: "lol", from: "lamo", adId: "343423vdfdsf", travelDate: "1-1-1" }

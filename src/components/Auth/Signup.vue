@@ -1,7 +1,8 @@
 <template>
   <v-layout row>
     <v-flex xs12>
-      <v-dialog v-model="dialog" max-width="500px">
+      <v-btn @click="signupAuthZero" class="orange">Signup</v-btn>
+      <!-- <v-dialog v-model="dialog" max-width="500px">
        <v-btn slot="activator" large class="orange">Signup</v-btn>
 
           <v-card class="pb-3">
@@ -31,51 +32,13 @@
             </v-card-text>        
           </v-card>
         
-      </v-dialog>
+      </v-dialog> -->
     </v-flex>
   </v-layout>
 </template>
 
 <script>
-import {
-  CognitoUserPool,
-  CognitoUser,
-  AuthenticationDetails
-} from "amazon-cognito-identity-js";
-import { loginMixin } from "./../../mixins/mixins.js";
 export default {
-  data() {
-    return {
-      dialog: false,
-      errorAlert: false,
-      signupData: {
-        username: "",
-        password: ""
-      }
-    };
-  },
-  mixins: [loginMixin],
-  methods: {
-    cognitoSignup() {
-      this.errorAlert = false;
-      let pool = this.$store.state.myPool;
-      let user = this.signupData.username;
-      let pass = this.signupData.password;
-      user && pass
-        ? this.cognitoSignupPartTwo(user, pass, pool)
-        : (this.errorAlert = true);
-    },
-    cognitoSignupPartTwo(username, password, pool) {
-      let vm = this;
-      pool.signUp(username, password, [], null, (err, result) => {
-        if (err) {
-          return (vm.errorAlert = true);
-        }
-        this.cognitoLogin(pool, username, password)
-          .then(res => (vm.errorAlert = res.value))
-          .catch(err => (vm.errorAlert = err.value));
-      });
-    }
-  }
+  methods: {}
 };
 </script>

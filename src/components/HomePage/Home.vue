@@ -42,10 +42,11 @@
 </template>
 
 <script>
+import { setIdToken } from "./../../utils/utils";
 export default {
   data() {
     return {
-      showLoadingIcon: true,
+      showLoadingIcon: false,
       refreshLoadingIcon: false,
       showMoreLoadingIcon: false
     };
@@ -72,13 +73,6 @@ export default {
     },
     evaluatedKey() {
       return this.$store.state.LastEvaluatedKey;
-    }
-  },
-  created() {
-    if (this.latestAds.length === 0) {
-      this.fetchAds();
-    } else {
-      this.showLoadingIcon = false;
     }
   }
 };

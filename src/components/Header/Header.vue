@@ -7,8 +7,11 @@
       >Car Share App</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <my-login v-if="loginStatus===false"></my-login>
-        <my-signup v-if="loginStatus===false"></my-signup>
+        <!-- <my-login v-if="loginStatus===false"></my-login>
+        <my-signup v-if="loginStatus===false"></my-signup> -->
+        <v-btn @click="loginAuthZero" class="orange" v-if="loginStatus===false">Login</v-btn>
+        <v-btn @click="signupAuthZero" class="orange" v-if="loginStatus===false">Signup</v-btn>
+
         <v-flex v-for="item in headerOptions" :key="item.text" v-if="loginStatus===true">
           <v-btn 
           large class="orange" 
@@ -21,8 +24,8 @@
 </template>
 
 <script>
-import Login from "./../Auth/Login.vue";
-import Signup from "./../Auth/Signup.vue";
+import { login } from "./../../utils/utils";
+import { clearAllTokens } from "./../../utils/utils";
 export default {
   data() {
     return {
@@ -34,30 +37,22 @@ export default {
     };
   },
   methods: {
+    loginAuthZero() {
+      login();
+    },
+    signupAuthZero() {
+      login();
+    },
     logout(path) {
-      let user = this.$store.state.myPool.getCurrentUser();
-      if (user !== null) {
-        user.signOut();
-        this.$store.dispatch("changeLoginState", { valueToApply: false });
-        this.$router.push(path);
-      } else {
-        console.log("while logging out user is null", user);
-      }
+      clearAllTokens();
+      this.$store.dispatch("changeLoginState", { valueToApply: false });
+      this.$router.push("/");
     }
   },
   computed: {
     loginStatus() {
       return this.$store.state.loggedIn;
-    },
-    loggedInUser() {
-      return this.$store.state.myPool.getCurrentUser()
-        ? this.$store.state.myPool.getCurrentUser().username
-        : "";
     }
-  },
-  components: {
-    "my-signup": Signup,
-    "my-login": Login
   }
 };
 </script>
