@@ -14,7 +14,8 @@ export function login() {
     redirectUri: "http://localhost:8080/callback",
     audience: "https://pms.au.auth0.com/userinfo",
     responseType: "token id_token",
-    scope: "openid"
+    scope: "openid profile",
+    user_metadata: { plan: "silver", team_id: "a111" }
   });
 }
 
@@ -59,6 +60,7 @@ export function sessionIsValid() {
   );
   if (idToken) {
     const decodedToken = decode(idToken);
+    console.log("Decoded token is --->", decodedToken);
     if (decodedToken.exp > timeNow) {
       return true;
     }
