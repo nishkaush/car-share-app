@@ -36,7 +36,8 @@
 
 <script>
 import axios from "axios";
-import uuidv4 from "uuid/v4";
+import gql from "graphql-tag";
+import moment from "moment";
 export default {
   data() {
     return {
@@ -68,21 +69,26 @@ export default {
   methods: {
     submitForm() {
       this.loadingIcon = true;
-      let data = Object.assign({}, this.formData);
-      data.adId = uuidv4();
-      data.owner = this.$store.state.myPool.getCurrentUser().username;
-      data.datePosted = Date.now();
-      data.bids = [];
-      let header = this.authHeader;
-      let url =
-        "https://6tty6nq7z1.execute-api.ap-southeast-2.amazonaws.com/dev/new-listing";
-      this.submitFormPartTwo(url, data, header);
+      let newFormData = Object.assign({}, this.formData);
+      newFormData.owner = this.$store.state.loggedInUser;
+      newFormData.datePosted = moment(Date.now()).format("DD/MM/YYYY");
+      this.submitFormPartTwo(newFormData);
     },
-    submitFormPartTwo(url, data, header) {
+    submitFormPartTwo(formData) {
       let vm = this;
-      axios
-        .post(url, data, {
-          headers: { Authorization: header }
+      const myMutation = gql`
+        mutation($input: formData!) {
+          createNewAd(input: $input) {
+            _id
+          }
+        }
+      `;
+      this.$apollo
+        .mutate({
+          mutation: myMutation,
+          variables: {
+            input: formData
+          }
         })
         .then(res => vm.submitFormSuccess())
         .catch(err => vm.submitFormFail());
