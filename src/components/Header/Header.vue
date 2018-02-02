@@ -53,6 +53,7 @@ export default {
     logout(path) {
       clearAllTokens();
       this.$store.dispatch("changeLoginState", { valueToApply: false });
+      this.$store.dispatch("changeLoggedInUser", { user: null });
       this.$router.push("/");
     }
   },

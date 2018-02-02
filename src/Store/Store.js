@@ -13,11 +13,15 @@ export const store = new Vuex.Store({
       { to: "lol", from: "lamo", adId: "343423vdfdsf", travelDate: "1-1-1" },
       { to: "lol", from: "lamo", adId: "343423vdfdsf", travelDate: "1-1-1" }
     ],
+    loggedInUser: "",
     LastEvaluatedKey: "nothing"
   },
   mutations: {
     changeLoggedIn(state, payload) {
       state.loggedIn = payload.value;
+    },
+    setLoggedInUser(state, payload) {
+      state.loggedInUser = payload.user;
     },
     preRefreshResults(state) {
       state.adsArr = [];
@@ -35,22 +39,9 @@ export const store = new Vuex.Store({
     changeLoginState(context, payload) {
       context.commit("changeLoggedIn", { value: payload.valueToApply });
     },
-    getAds(context) {
-      let lastKey =
-        context.state.LastEvaluatedKey === "nothing"
-          ? "nothing"
-          : context.state.LastEvaluatedKey.adId;
-      let url = `https://6tty6nq7z1.execute-api.ap-southeast-2.amazonaws.com/dev/get-ads/${lastKey}`;
-      return axios
-        .get(url)
-        .then(res => {
-          context.commit("updateAdsArr", res.data);
-          return "All is well in Vuex Actions";
-        })
-        .catch(err => {
-          return "Shit went sideways in Vuex Actions";
-          //make the adsArr=[] and let that show "No ads to show" on main screen
-        });
-    }
+    changeLoggedInUser(context, payload) {
+      context.commit("setLoggedInUser", { user: payload.user });
+    },
+    getAds(context) {}
   }
 });
