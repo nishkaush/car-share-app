@@ -43,6 +43,7 @@
 
 <script>
 import { setIdToken } from "./../../utils/utils";
+import gql from "graphql-tag";
 export default {
   data() {
     return {
@@ -54,17 +55,37 @@ export default {
   methods: {
     refreshAdResults() {
       this.refreshLoadingIcon = true;
-      this.$store.commit("preRefreshResults");
+      console.log("refresh is running");
+      // this.$store.commit("preRefreshResults");
       this.fetchAds({ refresh: true });
     },
     fetchAds(status = { refresh: false }) {
       let vm = this;
       vm.showMoreLoadingIcon = !status.refresh;
-      this.$store.dispatch("getAds").then(res => {
-        vm.showLoadingIcon = false;
-        vm.refreshLoadingIcon = false;
-        vm.showMoreLoadingIcon = false;
-      });
+      const myQuery = gql`
+        query {
+          getAllAds {
+            to
+            from
+            travelDate
+            _id
+          }
+        }
+      `;
+
+      this.$apollo
+        .query({
+          query: myQuery
+        })
+        .then(res => {
+          vm.showLoadingIcon = false;
+          vm.refreshLoadingIcon = false;
+          vm.showMoreLoadingIcon = false;
+          this.$store.dispatch("changeAdsArr", { arr: res.data.getAllAds });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   computed: {
@@ -73,6 +94,11 @@ export default {
     },
     evaluatedKey() {
       return this.$store.state.LastEvaluatedKey;
+    }
+  },
+  created() {
+    if (this.latestAds.length === 0) {
+      this.fetchAds();
     }
   }
 };
