@@ -17,14 +17,14 @@ export default {
     saveUserToDB(username) {
       let vm = this;
       const myMutation = gql`
-        mutation($username: String) {
+        mutation($username: String!) {
           addUser(username: $username)
         }
       `;
       this.$apollo
         .mutate({ mutation: myMutation, variables: { username } })
         .then(res => {
-          vm.$store.dispatch("changeLoggedInUser", { user: res });
+          vm.$store.dispatch("changeLoggedInUser", { user: res.data.addUser });
           vm.$store.dispatch("changeLoginState", { valueToApply: true });
           vm.$router.push("/");
         })

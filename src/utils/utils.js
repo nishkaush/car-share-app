@@ -60,7 +60,6 @@ export function sessionIsValid() {
   );
   if (idToken) {
     const decodedToken = decode(idToken);
-    console.log("Decoded token is --->", decodedToken);
     if (decodedToken.exp > timeNow) {
       return true;
     }

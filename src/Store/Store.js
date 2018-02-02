@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { CognitoUserPool } from "amazon-cognito-identity-js";
 import axios from "axios";
 import { sessionIsValid } from "./../utils/utils";
 Vue.use(Vuex);
