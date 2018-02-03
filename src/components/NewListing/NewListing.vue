@@ -54,8 +54,8 @@ export default {
       },
       inputsArr: [
         { label: "Travel Date", modelProp: "travelDate", type: "date" },
-        { label: "Starting Place", modelProp: "to", type: "text" },
-        { label: "Destination Place", modelProp: "from", type: "text" },
+        { label: "Starting Place", modelProp: "from", type: "text" },
+        { label: "Destination Place", modelProp: "to", type: "text" },
         { label: "Vehicle Type", modelProp: "vehicle", type: "text" },
         {
           label: "Number of passengers allowed",
@@ -80,12 +80,16 @@ export default {
         mutation($input: formData!) {
           createNewAd(input: $input) {
             _id
+            to
+            from
+            travelDate
           }
         }
       `;
       this.$apollo
         .mutate({
           mutation: myMutation,
+          fetchPolicy: "network-only",
           variables: {
             input: formData
           }

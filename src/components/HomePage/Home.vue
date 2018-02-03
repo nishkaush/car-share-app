@@ -23,7 +23,7 @@
                 <h3>From {{item.from.toUpperCase()}} To {{item.to.toUpperCase()}}</h3>
               </v-card-title>
               <v-card-text>
-                <span class="sub-title">Scheduled For {{item.travelDate}}</span>
+                <span class="sub-title">Travel Date {{item.travelDate}}</span>
               </v-card-text>
              </v-flex>
              <v-flex xs12 lg5>
@@ -36,7 +36,12 @@
            </v-layout>
 
         </v-card>
-        <v-btn block @click="fetchAds" :loading="showMoreLoadingIcon" class="orange" :disabled="evaluatedKey==='nothing'">Show More Results</v-btn>
+        <v-btn 
+        block @click="fetchAds" 
+        :loading="showMoreLoadingIcon" 
+        class="orange"
+        :disabled="!showMoreBtn"
+        >{{showMoreBtn?"Show More Results":"No more results left"}}</v-btn>
       </v-flex>
     </v-layout>
 </template>
@@ -49,22 +54,23 @@ export default {
     return {
       showLoadingIcon: false,
       refreshLoadingIcon: false,
-      showMoreLoadingIcon: false
+      showMoreLoadingIcon: false,
+      showMoreBtn: true
     };
   },
   methods: {
     refreshAdResults() {
       this.refreshLoadingIcon = true;
-      console.log("refresh is running");
-      // this.$store.commit("preRefreshResults");
+      this.showMoreBtn = true;
+      this.$store.commit("emptyAdsArr");
       this.fetchAds({ refresh: true });
     },
     fetchAds(status = { refresh: false }) {
-      let vm = this;
-      vm.showMoreLoadingIcon = !status.refresh;
+      let skip = this.latestAds.length > 0 ? this.latestAds.length : 0;
+      this.showMoreLoadingIcon = !status.refresh;
       const myQuery = gql`
-        query {
-          getAllAds {
+        query($skip: Int!) {
+          getAllAds(skip: $skip) {
             to
             from
             travelDate
@@ -72,19 +78,28 @@ export default {
           }
         }
       `;
-
+      this.fetchAdsPartTwo(myQuery, skip);
+    },
+    fetchAdsPartTwo(query, skip) {
+      let vm = this;
       this.$apollo
         .query({
-          query: myQuery
+          query,
+          variables: { skip: skip },
+          fetchPolicy: "network-only"
         })
         .then(res => {
           vm.showLoadingIcon = false;
           vm.refreshLoadingIcon = false;
           vm.showMoreLoadingIcon = false;
-          this.$store.dispatch("changeAdsArr", { arr: res.data.getAllAds });
+          res.data.getAllAds.length > 0
+            ? vm.$store.dispatch("changeAdsArr", { arr: res.data.getAllAds })
+            : (vm.showMoreBtn = false);
         })
         .catch(err => {
-          console.log(err);
+          vm.showLoadingIcon = false;
+          vm.refreshLoadingIcon = false;
+          vm.showMoreLoadingIcon = false;
         });
     }
   },

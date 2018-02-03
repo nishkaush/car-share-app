@@ -23,9 +23,8 @@ export const store = new Vuex.Store({
     setLoggedInUser(state, payload) {
       state.loggedInUser = payload.user;
     },
-    preRefreshResults(state) {
+    emptyAdsArr(state) {
       state.adsArr = [];
-      state.LastEvaluatedKey = "nothing";
     },
     updateAdsArr(state, payload) {
       state.adsArr = [...state.adsArr, ...payload.allAdsArr];
