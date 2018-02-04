@@ -67,9 +67,8 @@
 <script>
 import { setIdToken } from "./../../utils/utils";
 import gql from "graphql-tag";
-import { allBidsForAd } from "./../../Apollo/queries";
+import { allBidsForAd, fetchAllAds } from "./../../Apollo/queries";
 import { placeBid } from "./../../Apollo/mutations";
-import { fetchAllAds } from "./../../Apollo/queries";
 export default {
   data() {
     return {

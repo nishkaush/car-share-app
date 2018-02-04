@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app dark>
     <my-header></my-header>
     <v-container fluid>
       <router-view></router-view>
