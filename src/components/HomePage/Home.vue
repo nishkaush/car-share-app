@@ -43,8 +43,10 @@
                 <v-btn @click="showAllBids(item._id)" :loading="allBidsLoadingIcon">Show All Bids</v-btn>
                 <v-dialog v-model="allBidsDialog" max-width="500">
                   <v-card class="pa-4 text-xs-center">
+                    <h2 class="text-xs-center">List of Current Bids</h2>
+                    <hr>
                     <p v-if="allBidsArr.length===0">No Bids Yet</p>
-                    <p v-for="item in allBidsArr" :key="item.username">{{item.username}} - ${{item.bidPrice}}</p>
+                    <p class="mt-3" v-for="item in allBidsArr" :key="item.username">{{item.username}} - ${{item.bidPrice}}</p>
                   </v-card>
                 </v-dialog>
               </v-card-actions>
@@ -65,6 +67,9 @@
 <script>
 import { setIdToken } from "./../../utils/utils";
 import gql from "graphql-tag";
+import { allBidsForAd } from "./../../Apollo/queries";
+import { placeBid } from "./../../Apollo/mutations";
+import { fetchAllAds } from "./../../Apollo/queries";
 export default {
   data() {
     return {
@@ -87,22 +92,7 @@ export default {
   methods: {
     showAllBids(adId) {
       this.allBidsLoadingIcon = true;
-      const myQuery = gql`
-        query($id: ID!) {
-          allBidsForAd(adId: $id) {
-            username
-            bidPrice
-          }
-        }
-      `;
-      this.$apollo
-        .query({
-          query: myQuery,
-          fetchPolicy: "network-only",
-          variables: {
-            id: adId
-          }
-        })
+      allBidsForAd(adId)
         .then(res => {
           this.allBidsArr = res.data.allBidsForAd;
           this.allBidsLoadingIcon = false;
@@ -113,20 +103,7 @@ export default {
     placeNewBid(id, to, from, username) {
       this.newBidLoadingIcon = true;
       let inputArgs = { id, username, to, from, bidPrice: this.bidPrice };
-      const myMutation = gql`
-        mutation($input: newBidArgs!) {
-          placeNewBid(input: $input) {
-            bidPrice
-          }
-        }
-      `;
-      this.$apollo
-        .mutate({
-          mutation: myMutation,
-          variables: {
-            input: inputArgs
-          }
-        })
+      placeBid(inputArgs)
         .then(res => {
           this.newBidLoadingIcon = false;
           this.placeBidDialog = false;
@@ -149,29 +126,10 @@ export default {
       this.fetchAds({ refresh: true });
     },
     fetchAds(status = { refresh: false }) {
+      let vm = this;
       let skip = this.latestAds.length > 0 ? this.latestAds.length : 0;
       this.showMoreLoadingIcon = !status.refresh;
-      const myQuery = gql`
-        query($skip: Int!) {
-          getAllAds(skip: $skip) {
-            to
-            from
-            travelDate
-            _id
-            owner
-          }
-        }
-      `;
-      this.fetchAdsPartTwo(myQuery, skip);
-    },
-    fetchAdsPartTwo(query, skip) {
-      let vm = this;
-      this.$apollo
-        .query({
-          query,
-          variables: { skip: skip },
-          fetchPolicy: "network-only"
-        })
+      fetchAllAds(skip)
         .then(res => {
           vm.showLoadingIcon = false;
           vm.refreshLoadingIcon = false;
