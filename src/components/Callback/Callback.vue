@@ -39,11 +39,6 @@ export default {
     if (isTokenSet) {
       let decodedToken = decode(getIdToken());
       return this.saveUserToDB(decodedToken.name);
-      //SEND A REQUEST TO GRAPHQL TO SAVE THIS BLODDDY USER!!!!
-      //USE VUE-APOLLO/
-      //dispatch action to post a request to graphql query
-      //make this action store the current username in VUEX
-      //call decode(idToken) ==> response.name=email
     }
     vm.$router.push("/");
   }

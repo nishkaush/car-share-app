@@ -17,4 +17,24 @@ function placeBid(inputArgs) {
   });
 }
 
-export { placeBid };
+function postNewAd(formData) {
+  const myMutation = gql`
+    mutation($input: formData!) {
+      createNewAd(input: $input) {
+        _id
+        to
+        from
+        travelDate
+      }
+    }
+  `;
+  return apolloClient.mutate({
+    mutation: myMutation,
+    fetchPolicy: "network-only",
+    variables: {
+      input: formData
+    }
+  });
+}
+
+export { placeBid, postNewAd };

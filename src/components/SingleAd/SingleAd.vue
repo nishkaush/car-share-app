@@ -25,10 +25,10 @@
 
 <script>
 import gql from "graphql-tag";
+import { getSingleAd } from "./../../Apollo/queries";
 export default {
   data() {
     return {
-      currentRoute: this.$route.params.adId,
       adInfoTable: [
         { text: "From", prop: "from" },
         { text: "To", prop: "to" },
@@ -42,27 +42,8 @@ export default {
   methods: {
     fetchSingleAd() {
       let vm = this;
-      const myQuery = gql`
-        query($id: ID!) {
-          getSingleAd(id: $id) {
-            _id
-            to
-            from
-            owner
-            travelDate
-            datePosted
-            passengers
-            additionalNote
-          }
-        }
-      `;
-      this.$apollo
-        .query({
-          query: myQuery,
-          variables: {
-            id: vm.currentRoute
-          }
-        })
+      let adId = this.currentRoute;
+      getSingleAd(adId)
         .then(res => {
           this.$store.dispatch("changeSingleAd", { ad: res.data.getSingleAd });
         })
@@ -74,13 +55,13 @@ export default {
   computed: {
     currentAd() {
       return this.$store.state.currentSingleAd;
+    },
+    currentRoute() {
+      return this.$route.params.adId;
     }
   },
   created() {
-    let vm = this;
-    if (!this.currentAd) {
-      this.fetchSingleAd();
-    }
+    this.fetchSingleAd();
   }
 };
 </script>

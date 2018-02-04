@@ -43,4 +43,27 @@ function fetchAllAds(skip) {
   });
 }
 
-export { allBidsForAd, fetchAllAds };
+function getSingleAd(adId) {
+  const myQuery = gql`
+    query($id: ID!) {
+      getSingleAd(id: $id) {
+        _id
+        to
+        from
+        owner
+        travelDate
+        datePosted
+        passengers
+        additionalNote
+      }
+    }
+  `;
+  return apolloClient.query({
+    query: myQuery,
+    variables: {
+      id: adId
+    }
+  });
+}
+
+export { allBidsForAd, fetchAllAds, getSingleAd };

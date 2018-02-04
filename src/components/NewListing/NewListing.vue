@@ -38,6 +38,7 @@
 import axios from "axios";
 import gql from "graphql-tag";
 import moment from "moment";
+import { postNewAd } from "./../../Apollo/mutations";
 export default {
   data() {
     return {
@@ -76,24 +77,7 @@ export default {
     },
     submitFormPartTwo(formData) {
       let vm = this;
-      const myMutation = gql`
-        mutation($input: formData!) {
-          createNewAd(input: $input) {
-            _id
-            to
-            from
-            travelDate
-          }
-        }
-      `;
-      this.$apollo
-        .mutate({
-          mutation: myMutation,
-          fetchPolicy: "network-only",
-          variables: {
-            input: formData
-          }
-        })
+      postNewAd(formData)
         .then(res => vm.submitFormSuccess())
         .catch(err => vm.submitFormFail());
     },
