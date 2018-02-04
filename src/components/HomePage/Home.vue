@@ -1,5 +1,9 @@
 <template>
     <v-layout row>
+      <v-snackbar v-model="snackbar" :top="snackBarPosition" :timeout="snackBarTimeout">
+       {{snackBarText}}
+        <v-btn class="orange" @click="snackbar=false">Close</v-btn>
+      </v-snackbar>
       <v-flex d-flex justify-content-center align-items-center v-if="showLoadingIcon===true">
         <v-progress-circular indeterminate :size="100" :width="7" color="orange">Getting Latest Listings</v-progress-circular>
       </v-flex>
@@ -28,9 +32,21 @@
              </v-flex>
              <v-flex xs12 lg5>
               <v-card-actions>
-                <v-btn>More Info</v-btn>
-                <v-btn>Place a bid</v-btn>
-                <v-btn>Show All Bids</v-btn>
+                <v-btn @click="showSingleAd(item._id)">More Info</v-btn>
+                <v-btn @click="loginStatus?placeBidDialog=true:snackbar=true">Place a bid</v-btn>
+                <v-dialog v-model="placeBidDialog" max-width="500">
+                  <v-card class="pa-5">
+                    <v-text-field label="Enter Bid in $" v-model="bidPrice" mask="####"></v-text-field>
+                    <v-btn @click="placeNewBid(item._id,item.to,item.from,item.owner)" class="orange" :loading="newBidLoadingIcon">Submit</v-btn>
+                  </v-card>
+                </v-dialog>
+                <v-btn @click="showAllBids(item._id)" :loading="allBidsLoadingIcon">Show All Bids</v-btn>
+                <v-dialog v-model="allBidsDialog" max-width="500">
+                  <v-card class="pa-4 text-xs-center">
+                    <p v-if="allBidsArr.length===0">No Bids Yet</p>
+                    <p v-for="item in allBidsArr" :key="item.username">{{item.username}} - ${{item.bidPrice}}</p>
+                  </v-card>
+                </v-dialog>
               </v-card-actions>
              </v-flex>
            </v-layout>
@@ -55,10 +71,77 @@ export default {
       showLoadingIcon: false,
       refreshLoadingIcon: false,
       showMoreLoadingIcon: false,
-      showMoreBtn: true
+      newBidLoadingIcon: false,
+      allBidsLoadingIcon: false,
+      showMoreBtn: true,
+      placeBidDialog: false,
+      allBidsDialog: false,
+      bidPrice: "",
+      allBidsArr: [],
+      snackbar: false,
+      snackBarPosition: "top",
+      snackBarTimeout: 6000,
+      snackBarText: "Please login to place bids"
     };
   },
   methods: {
+    showAllBids(adId) {
+      this.allBidsLoadingIcon = true;
+      const myQuery = gql`
+        query($id: ID!) {
+          allBidsForAd(adId: $id) {
+            username
+            bidPrice
+          }
+        }
+      `;
+      this.$apollo
+        .query({
+          query: myQuery,
+          fetchPolicy: "network-only",
+          variables: {
+            id: adId
+          }
+        })
+        .then(res => {
+          this.allBidsArr = res.data.allBidsForAd;
+          this.allBidsLoadingIcon = false;
+          this.allBidsDialog = true;
+        })
+        .catch(err => err);
+    },
+    placeNewBid(id, to, from, username) {
+      this.newBidLoadingIcon = true;
+      let inputArgs = { id, username, to, from, bidPrice: this.bidPrice };
+      const myMutation = gql`
+        mutation($input: newBidArgs!) {
+          placeNewBid(input: $input) {
+            bidPrice
+          }
+        }
+      `;
+      this.$apollo
+        .mutate({
+          mutation: myMutation,
+          variables: {
+            input: inputArgs
+          }
+        })
+        .then(res => {
+          this.newBidLoadingIcon = false;
+          this.placeBidDialog = false;
+          this.snackbar = true;
+          this.snackBarText = "Your Bid Was Successfully Posted!";
+          setTimeout(
+            () => (this.snackBarText = "Please login to place bids"),
+            6000
+          );
+        })
+        .catch(err => !this.newBidLoadingIcon);
+    },
+    showSingleAd(adId) {
+      this.$router.push({ path: `/ad/${adId}` });
+    },
     refreshAdResults() {
       this.refreshLoadingIcon = true;
       this.showMoreBtn = true;
@@ -75,6 +158,7 @@ export default {
             from
             travelDate
             _id
+            owner
           }
         }
       `;
@@ -106,6 +190,9 @@ export default {
   computed: {
     latestAds() {
       return this.$store.state.adsArr;
+    },
+    loginStatus() {
+      return this.$store.state.loggedIn;
     },
     evaluatedKey() {
       return this.$store.state.LastEvaluatedKey;

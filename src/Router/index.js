@@ -4,6 +4,7 @@ import Home from "./../components/Homepage/Home.vue";
 import Profile from "./../components/Profile/Profile.vue";
 import NewListing from "./../components/NewListing/NewListing.vue";
 import Callback from "./../components/Callback/Callback.vue";
+import SingleAd from "./../components/SingleAd/SingleAd.vue";
 import { store } from "./../Store/Store.js";
 import { sessionIsValid } from "./../utils/utils";
 
@@ -33,6 +34,10 @@ export const router = new VueRouter({
     {
       path: "/callback",
       component: Callback
+    },
+    {
+      path: "/ad/:adId",
+      component: SingleAd
     },
     {
       path: "*",

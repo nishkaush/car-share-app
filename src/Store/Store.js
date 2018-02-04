@@ -8,11 +8,8 @@ let loggedInValue = sessionIsValid() ? true : false;
 export const store = new Vuex.Store({
   state: {
     loggedIn: loggedInValue,
-    // adsArr: [
-    //   { to: "lol", from: "lamo", adId: "343423vdfdsf", travelDate: "1-1-1" },
-    //   { to: "lol", from: "lamo", adId: "343423vdfdsf", travelDate: "1-1-1" }
-    // ],
     adsArr: [],
+    currentSingleAd: "",
     loggedInUser: "",
     LastEvaluatedKey: "nothing"
   },
@@ -28,6 +25,9 @@ export const store = new Vuex.Store({
     },
     updateAdsArr(state, payload) {
       state.adsArr = [...state.adsArr, ...payload.allAdsArr];
+    },
+    setSingleAd(state, payload) {
+      state.currentSingleAd = payload.singleAd;
     }
   },
   actions: {
@@ -39,6 +39,9 @@ export const store = new Vuex.Store({
     },
     changeAdsArr(context, payload) {
       context.commit("updateAdsArr", { allAdsArr: payload.arr });
+    },
+    changeSingleAd(context, payload) {
+      context.commit("setSingleAd", { singleAd: payload.ad });
     }
   }
 });
