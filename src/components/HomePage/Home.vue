@@ -37,7 +37,7 @@
                 <v-dialog v-model="placeBidDialog" max-width="500">
                   <v-card class="pa-5">
                     <v-text-field label="Enter Bid in $" v-model="bidPrice" mask="####"></v-text-field>
-                    <v-btn @click="placeNewBid(item._id,item.to,item.from,item.owner)" class="orange" :loading="newBidLoadingIcon">Submit</v-btn>
+                    <v-btn @click="placeNewBid(item._id,item.to,item.from)" class="orange" :loading="newBidLoadingIcon">Submit</v-btn>
                   </v-card>
                 </v-dialog>
                 <v-btn @click="showAllBids(item._id)" :loading="allBidsLoadingIcon">Show All Bids</v-btn>
@@ -46,7 +46,7 @@
                     <h2 class="text-xs-center">List of Current Bids</h2>
                     <hr>
                     <p v-if="allBidsArr.length===0">No Bids Yet</p>
-                    <p class="mt-3" v-for="item in allBidsArr" :key="item.username">{{item.username}} - ${{item.bidPrice}}</p>
+                    <p class="mt-3" v-for="(item,i) in allBidsArr" :key="i">{{item.username}} - ${{item.bidPrice}}</p>
                   </v-card>
                 </v-dialog>
               </v-card-actions>
@@ -99,9 +99,11 @@ export default {
         })
         .catch(err => err);
     },
-    placeNewBid(id, to, from, username) {
+    placeNewBid(id, to, from) {
       this.newBidLoadingIcon = true;
+      let username = this.$store.state.loggedInUser;
       let inputArgs = { id, username, to, from, bidPrice: this.bidPrice };
+      console.log("Ad's id is -->", inputArgs.id);
       placeBid(inputArgs)
         .then(res => {
           this.newBidLoadingIcon = false;

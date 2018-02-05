@@ -26,7 +26,7 @@
           <h2 class="text-xs-center">List of Current Bids</h2>
           <hr>
           <p v-if="allBidsArray.length===0">No Bids Yet</p>
-          <p class="mt-3" v-for="item in allBidsArray" :key="item.username">{{item.username}} - ${{item.bidPrice}}</p>
+          <p class="mt-3" v-for="(item,i) in allBidsArray" :key="i">{{item.username}} - ${{item.bidPrice}}</p>
         </v-card>
       </v-dialog>
 
