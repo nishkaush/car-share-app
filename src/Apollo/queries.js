@@ -66,4 +66,25 @@ function getSingleAd(adId) {
   });
 }
 
-export { allBidsForAd, fetchAllAds, getSingleAd };
+function allAdsForUser(username, adStatus) {
+  const myQuery = gql`
+    query($username: String!, $adStatus: String!) {
+      allAdsForUser(username: $username, adStatus: $adStatus) {
+        to
+        from
+        adId
+        adStatus
+        datePosted
+      }
+    }
+  `;
+  return apolloClient.query({
+    query: myQuery,
+    fetchPolicy: "network-only",
+    variables: {
+      username,
+      adStatus
+    }
+  });
+}
+export { allBidsForAd, fetchAllAds, getSingleAd, allAdsForUser };

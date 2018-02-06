@@ -9,8 +9,10 @@ export const store = new Vuex.Store({
   state: {
     loggedIn: loggedInValue,
     adsArr: [],
+    userAdsArr: [],
     currentSingleAd: "",
     loggedInUser: "",
+    bidsForAdArr: [],
     LastEvaluatedKey: "nothing"
   },
   mutations: {
@@ -28,6 +30,12 @@ export const store = new Vuex.Store({
     },
     setSingleAd(state, payload) {
       state.currentSingleAd = payload.singleAd;
+    },
+    updateUserAdsArr(state, payload) {
+      state.userAdsArr = payload.arr;
+    },
+    updateBidsForAdArr(state, payload) {
+      state.bidsForAdArr = payload.arr;
     }
   },
   actions: {
@@ -42,6 +50,9 @@ export const store = new Vuex.Store({
     },
     changeSingleAd(context, payload) {
       context.commit("setSingleAd", { singleAd: payload.ad });
+    },
+    changeUserAdsArr(context, payload) {
+      context.commit("updateUserAdsArr", { arr: payload.userAds });
     }
   }
 });
