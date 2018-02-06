@@ -3,7 +3,7 @@
       <v-flex d-flex justify-content-center align-items-center v-if="showLoadingIcon===true">
         <v-progress-circular indeterminate :size="100" :width="7" color="orange">Getting Latest Listings</v-progress-circular>
       </v-flex>
-      <v-flex xs12 md6 offset-md3 v-else>
+      <v-flex xs12 md8 offset-md2 v-else>
         <div class="text-xs-right">
           <v-btn 
           class="mb-5 mt-3" 
@@ -18,7 +18,7 @@
         <v-card v-for="item in latestAds" :key="item._id" v-if="latestAds.length>0" class="mb-4">
 
            <v-layout row wrap>
-             <v-flex xs12 lg9>
+             <v-flex xs12 lg7>
               <v-card-title>
                 <h3>From {{item.from.toUpperCase()}} To {{item.to.toUpperCase()}}</h3>
               </v-card-title>
@@ -26,9 +26,13 @@
                 <span class="sub-title">Travel Date {{item.travelDate}}</span>
               </v-card-text>
              </v-flex>
-             <v-flex xs12 lg3>
+             <v-flex xs12 lg5>
               <v-card-actions>
-                <v-btn block @click="showSingleAd(item._id)">More Info</v-btn>
+                <v-btn @click="showSingleAd(item._id)">More Info</v-btn>
+
+                <all-bids-dialog :adId="item._id"></all-bids-dialog>
+                <place-bid-dialogue :adId="item._id" :toPlace="item.to" :fromPlace="item.from"></place-bid-dialogue>
+
               </v-card-actions>
              </v-flex>
            </v-layout>
@@ -48,6 +52,8 @@
 import { setIdToken } from "./../../utils/utils";
 import gql from "graphql-tag";
 import { allBidsForAd, fetchAllAds } from "./../../Apollo/queries";
+import AllBidsDialog from "./AllBidsDialog.vue";
+import PlaceBidDialog from "./PlaceBidDialog.vue";
 export default {
   data() {
     return {
@@ -99,6 +105,10 @@ export default {
     evaluatedKey() {
       return this.$store.state.LastEvaluatedKey;
     }
+  },
+  components: {
+    "place-bid-dialogue": PlaceBidDialog,
+    "all-bids-dialog": AllBidsDialog
   },
   created() {
     if (this.latestAds.length === 0) {

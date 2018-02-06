@@ -9,6 +9,7 @@ export const store = new Vuex.Store({
   state: {
     loggedIn: loggedInValue,
     adsArr: [],
+    bidsForSingleAd: [],
     userAdsArr: [],
     currentSingleAd: "",
     loggedInUser: "",
@@ -36,6 +37,9 @@ export const store = new Vuex.Store({
     },
     updateBidsForAdArr(state, payload) {
       state.bidsForAdArr = payload.arr;
+    },
+    updateBidsForSingleAd(state, payload) {
+      state.bidsForSingleAd = payload.arr;
     }
   },
   actions: {
