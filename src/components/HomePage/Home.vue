@@ -1,19 +1,21 @@
 <template>
-    <v-layout row>
+    <v-layout row wrap>
+      <!-- <my-search-bar></my-search-bar> -->
       <v-flex d-flex justify-content-center align-items-center v-if="showLoadingIcon===true">
         <v-progress-circular indeterminate :size="100" :width="7" color="orange">Getting Latest Listings</v-progress-circular>
       </v-flex>
       <v-flex xs12 md8 offset-md2 v-else>
         <div class="text-xs-right">
           <v-btn 
-          class="mb-5 mt-3" 
+          class="mt-3 mb-0" 
+          flat
           :loading="refreshLoadingIcon"
           @click="refreshAdResults"> 
-          <v-icon>refresh</v-icon> 
-          &nbsp; Refresh Results
+          <v-icon x-large color="green">refresh</v-icon>
+          Refresh Results
           </v-btn>
         </div>
-        <p class="title">Latest Ads for Sharing Car Rides</p>
+        <p class="title">Latest Ads for Sharing Rides</p>
         <v-card v-if="latestAds.length===0" class="pt-2 pb-2">Fetching Latest Listings...</v-card>
         <v-card v-if="activeAds.length===0" class="pa-5">No Active Listings Found</v-card>
         <v-card v-for="item in latestAds" :key="item._id" v-if="item.adStatus==='onGoing'" class="mb-4">
@@ -39,12 +41,12 @@
            </v-layout>
 
         </v-card>
-        <v-btn 
-        block @click="fetchAds" 
+        <div class="text-xs-center"><v-btn 
+        @click="fetchAds" 
         :loading="showMoreLoadingIcon" 
         class="orange"
         :disabled="!showMoreBtn"
-        >{{showMoreBtn?"Show More Results":"No more results left"}}</v-btn>
+        >{{showMoreBtn?"Show More Results":"No more results left"}}</v-btn></div>
       </v-flex>
     </v-layout>
 </template>
@@ -55,6 +57,7 @@ import gql from "graphql-tag";
 import { allBidsForAd, fetchAllAds } from "./../../Apollo/queries";
 import AllBidsDialog from "./AllBidsDialog.vue";
 import PlaceBidDialog from "./PlaceBidDialog.vue";
+import SearchBar from "./SearchBar.vue";
 export default {
   data() {
     return {
@@ -113,7 +116,8 @@ export default {
   },
   components: {
     "place-bid-dialogue": PlaceBidDialog,
-    "all-bids-dialog": AllBidsDialog
+    "all-bids-dialog": AllBidsDialog,
+    "my-search-bar": SearchBar
   },
   created() {
     if (this.latestAds.length === 0) {

@@ -73,6 +73,10 @@ export default {
       let newFormData = Object.assign({}, this.formData);
       newFormData.owner = this.$store.state.loggedInUser;
       newFormData.datePosted = moment(Date.now()).format("DD/MM/YYYY");
+      newFormData.travelDate = moment(
+        this.formData.travelDate,
+        "YYYY/MM/DD"
+      ).format("DD/MM/YYYY");
       this.submitFormPartTwo(newFormData);
     },
     submitFormPartTwo(formData) {

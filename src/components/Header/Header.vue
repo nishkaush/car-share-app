@@ -4,7 +4,7 @@
       <v-toolbar-title 
       @click="$router.push('/')" 
       style="cursor:pointer;"
-      >Car Share App</v-toolbar-title>
+      >Ride Share App</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn 
