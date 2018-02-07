@@ -7,15 +7,12 @@
         <h2>List of Current Bids</h2>
         <v-divider></v-divider>
         <p v-if="bidsArr.length===0">No Bids Yet</p>
-
-
         <v-card-text v-if="successful">
           <div class="text-xs-center pb-3"><v-icon dark x-large color="green">check_circle</v-icon></div>
           <h3>You have successfully chosen a winning Bid!</h3>
           <p>The winner has been notified and your listing has finished.</p>
           <div><v-btn class="orange mt-3" @click="closeDialogBox">Close</v-btn></div>
         </v-card-text>
-
         <v-card-text v-else>
           <v-radio-group v-model="chosenBid" :mandatory="false">
             <v-radio 
@@ -27,8 +24,6 @@
             ></v-radio>
           </v-radio-group>
         </v-card-text>
-
-
         <v-card-actions v-if="successful===false">
           <v-btn class="orange" :disabled="!chosenBid" @click="approveBid" :loading="loadingIcon">Approve</v-btn>
           <v-btn class="orange" @click="closeDialogBox">Close</v-btn>
@@ -43,6 +38,7 @@
 <script>
 import gql from "graphql-tag";
 import { allBidsForAd } from "./../../Apollo/queries";
+import { approvingBid } from "./../../Apollo/mutations";
 export default {
   props: ["myAdId", "adStatus"],
   data() {
@@ -78,26 +74,10 @@ export default {
     approveBid() {
       let vm = this;
       this.loadingIcon = true;
-      const myMutation = gql`
-        mutation($adId: ID!, $owner: String!, $winnerName: String!) {
-          approveBid(adId: $adId, owner: $owner, winnerName: $winnerName) {
-            adId
-            datePosted
-            adStatus
-            to
-            from
-          }
-        }
-      `;
-      this.$apollo
-        .mutate({
-          mutation: myMutation,
-          variables: {
-            adId: vm.myAdId,
-            owner: vm.$store.state.loggedInUser,
-            winnerName: vm.chosenBid
-          }
-        })
+      let adId = this.myAdId;
+      let owner = this.$store.state.loggedInUser;
+      let winnerName = this.chosenBid;
+      approvingBid(adId, owner, winnerName)
         .then(res => {
           vm.loadingIcon = false;
           vm.successful = true;

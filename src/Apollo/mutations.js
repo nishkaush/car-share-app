@@ -37,4 +37,26 @@ function postNewAd(formData) {
   });
 }
 
-export { placeBid, postNewAd };
+function approvingBid(adId, owner, winnerName) {
+  const myMutation = gql`
+    mutation($adId: ID!, $owner: String!, $winnerName: String!) {
+      approveBid(adId: $adId, owner: $owner, winnerName: $winnerName) {
+        adId
+        datePosted
+        adStatus
+        to
+        from
+      }
+    }
+  `;
+  return apolloClient.mutate({
+    mutation: myMutation,
+    variables: {
+      adId,
+      owner,
+      winnerName
+    }
+  });
+}
+
+export { placeBid, postNewAd, approvingBid };
