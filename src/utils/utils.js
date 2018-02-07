@@ -6,12 +6,13 @@ import Auth0Lock from "auth0-lock";
 
 let myAuth = new auth0.WebAuth({
   domain: "pms.au.auth0.com",
-  clientID: "zaXwVRlWiIf2my9Fbp3bjz9GScbtqf5r"
+  clientID: "zV********9GS*****f5r"
 });
 
 export function login() {
   myAuth.authorize({
-    redirectUri: "http://localhost:8080/callback",
+    redirectUri:
+      "http://car-share-app.s3-website-ap-southeast-2.amazonaws.com/callback",
     audience: "https://pms.au.auth0.com/userinfo",
     responseType: "token id_token",
     scope: "openid profile",

@@ -37,8 +37,8 @@ export default {
   data() {
     return {
       headerOptions: [
-        { text: "My Profile", path: "profile" },
-        { text: "New Listing", path: "new-listing" },
+        { text: "My Profile", path: "/profile" },
+        { text: "New Listing", path: "/new-listing" },
         { text: "Logout", path: "/" }
       ]
     };

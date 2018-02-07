@@ -5,7 +5,7 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import VueApollo from "vue-apollo";
 
 const httpLink = new HttpLink({
-  uri: "http://localhost:3000/graphql"
+  uri: "https://ride-share-app.herokuapp.com/graphql"
 });
 
 // Create the apollo client

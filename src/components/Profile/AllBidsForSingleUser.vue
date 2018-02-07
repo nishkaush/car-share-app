@@ -13,6 +13,9 @@
         <td>${{props.item.bidPrice}}</td>
         <td>{{props.item.bidStatus.toUpperCase() }}</td>
       </template>
+      <template slot="no-data">
+        <v-progress-circular indeterminate :size="70" :width="7" color="orange"></v-progress-circular>
+      </template>
     </v-data-table>
   </v-tabs-content>
 </template>

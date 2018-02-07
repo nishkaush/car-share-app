@@ -30,14 +30,14 @@ export default {
   methods: {
     fetchAllBids() {
       this.loadingIcon = true;
-      this.showAllBidsDialog = true;
       let adId = this.adId;
       allBidsForAd(adId)
         .then(res => {
-          this.loadingIcon = false;
           this.$store.commit("updateBidsForSingleAd", {
             arr: res.data.allBidsForAd
           });
+          this.loadingIcon = false;
+          this.showAllBidsDialog = true;
         })
         .catch(err => err);
     }

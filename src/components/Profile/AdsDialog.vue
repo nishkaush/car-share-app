@@ -63,11 +63,11 @@ export default {
       let adId = this.myAdId;
       allBidsForAd(adId)
         .then(res => {
-          this.btnLoadingIcon = false;
-          this.dialogBox = true;
           this.$store.commit("updateBidsForAdArr", {
             arr: res.data.allBidsForAd
           });
+          this.btnLoadingIcon = false;
+          this.dialogBox = true;
         })
         .catch(err => (this.btnLoadingIcon = false));
     },

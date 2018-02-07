@@ -17,6 +17,9 @@
         <v-spacer></v-spacer>
         <td>{{ currentAd[props.item.prop]|| "Not Provided"}}</td>
       </template>
+      <template slot="no-data">
+        <v-progress-circular indeterminate :size="70" :width="7" color="orange"></v-progress-circular>
+      </template>
     </v-data-table>
 
     <div class="text-xs-center">
@@ -50,6 +53,7 @@ import { placeBid } from "./../../Apollo/mutations";
 export default {
   data() {
     return {
+      // initialLoadIcon: true,
       allBidsLoading: false,
       newBidLoading: false,
       seeBidsDialog: false,
@@ -78,6 +82,7 @@ export default {
       getSingleAd(adId)
         .then(res => {
           this.$store.dispatch("changeSingleAd", { ad: res.data.getSingleAd });
+          // this.initialLoadIcon = false;
         })
         .catch(err => {
           console.log(err);

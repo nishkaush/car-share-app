@@ -15,6 +15,7 @@
           bottom
         ></v-select>
         <v-list>
+          <v-progress-circular indeterminate :size="70" :width="7" color="orange" v-if="initialLoadingIcon"></v-progress-circular>
           <p v-if="myAdsArr.length===0">No Ads to Display</p>
           <v-list-tile v-for="(item,i) in myAdsArr" :key="i" class="pa-3">
             <v-list-tile-content>
@@ -43,6 +44,7 @@ import AllBidsForSingleUser from "./AllBidsForSingleUser.vue";
 export default {
   data() {
     return {
+      initialLoadingIcon: true,
       adStatusType: "onGoing",
       chosenBid: "",
       adStatuses: ["onGoing", "finished"]
@@ -65,6 +67,7 @@ export default {
         this.$store.dispatch("changeUserAdsArr", {
           userAds: res.data.allAdsForUser
         });
+        this.initialLoadingIcon = false;
       })
       .catch(err => err);
   },

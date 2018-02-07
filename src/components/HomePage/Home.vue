@@ -17,7 +17,7 @@
         </div>
         <p class="title">Latest Ads for Sharing Rides</p>
         <v-card v-if="latestAds.length===0" class="pt-2 pb-2">Fetching Latest Listings...</v-card>
-        <v-card v-if="activeAds.length===0" class="pa-5">No Active Listings Found</v-card>
+        <!-- <v-card v-if="activeAds.length===0" class="pa-5">No Active Listings Found</v-card> -->
         <v-card v-for="item in latestAds" :key="item._id" v-if="item.adStatus==='onGoing'" class="mb-4">
 
            <v-layout row wrap>
