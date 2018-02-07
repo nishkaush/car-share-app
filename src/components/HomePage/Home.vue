@@ -15,7 +15,8 @@
         </div>
         <p class="title">Latest Ads for Sharing Car Rides</p>
         <v-card v-if="latestAds.length===0" class="pt-2 pb-2">Fetching Latest Listings...</v-card>
-        <v-card v-for="item in latestAds" :key="item._id" v-if="latestAds.length>0" class="mb-4">
+        <v-card v-if="activeAds.length===0" class="pa-5">No Active Listings Found</v-card>
+        <v-card v-for="item in latestAds" :key="item._id" v-if="item.adStatus==='onGoing'" class="mb-4">
 
            <v-layout row wrap>
              <v-flex xs12 lg7>
@@ -104,6 +105,10 @@ export default {
     },
     evaluatedKey() {
       return this.$store.state.LastEvaluatedKey;
+    },
+    activeAds() {
+      let finalArr = this.latestAds.filter(e => e.adStatus === "onGoing");
+      return finalArr;
     }
   },
   components: {
@@ -113,6 +118,8 @@ export default {
   created() {
     if (this.latestAds.length === 0) {
       this.fetchAds();
+    } else {
+      this.refreshAdResults();
     }
   }
 };

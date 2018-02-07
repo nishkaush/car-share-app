@@ -18,19 +18,17 @@
           <p v-if="myAdsArr.length===0">No Ads to Display</p>
           <v-list-tile v-for="(item,i) in myAdsArr" :key="i" class="pa-3">
             <v-list-tile-content>
-              <v-list-tile-title>From {{item.from}} To {{item.to}}</v-list-tile-title>
+              <v-list-tile-title>From {{item.from.toUpperCase()}} To {{item.to.toUpperCase()}}</v-list-tile-title>
               <v-list-tile-sub-title>Posted On {{item.datePosted}}</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <my-ads-dialog :myAdId="item.adId"></my-ads-dialog>
+              <my-ads-dialog :myAdId="item.adId" :adStatus="item.adStatus"></my-ads-dialog>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
       </v-tabs-content>
 
-      <v-tabs-content id="bids-content">
-        Lorem ipsum dolor sit amet consect
-      </v-tabs-content>
+      <bids-content id="bids-content"></bids-content>
 
     </v-tabs-items>
   </v-tabs>
@@ -40,16 +38,14 @@
 import gql from "graphql-tag";
 import AdsDialog from "./AdsDialog.vue";
 import { allAdsForUser } from "./../../Apollo/queries";
+import AllBidsForSingleUser from "./AllBidsForSingleUser.vue";
+
 export default {
   data() {
     return {
       adStatusType: "onGoing",
       chosenBid: "",
-      adStatuses: ["onGoing", "finished"],
-      adsBidsArr: [
-        { username: "nish@nish.com", bidPrice: "70" },
-        { username: "sana@sana.com", bidPrice: "80" }
-      ]
+      adStatuses: ["onGoing", "finished"]
     };
   },
   computed: {
@@ -58,7 +54,8 @@ export default {
     }
   },
   components: {
-    "my-ads-dialog": AdsDialog
+    "my-ads-dialog": AdsDialog,
+    "bids-content": AllBidsForSingleUser
   },
   created() {
     let username = this.$store.state.loggedInUser;

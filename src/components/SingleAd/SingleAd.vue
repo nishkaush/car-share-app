@@ -20,7 +20,7 @@
     </v-data-table>
 
     <div class="text-xs-center">
-      <v-btn class="orange" @click="seeAllBids" :loading="allBidsLoading">Show All Bids</v-btn>
+      <v-btn class="orange" @click="seeAllBids" :loading="allBidsLoading" :disabled="disableBtn">Show All Bids</v-btn>
       <v-dialog v-model="seeBidsDialog" max-width="500">
         <v-card class="pa-4 text-xs-center">
           <h2 class="text-xs-center">List of Current Bids</h2>
@@ -30,7 +30,7 @@
         </v-card>
       </v-dialog>
 
-      <v-btn class="orange" @click="loginState?placeBidBox=true:mySnackbar=true">Place a bid</v-btn>
+      <v-btn class="orange" @click="loginState?placeBidBox=true:mySnackbar=true" :disabled="disableBtn">Place a bid</v-btn>
       <v-dialog v-model="placeBidBox" max-width="500">
         <v-card class="pa-5">
           <v-text-field label="Enter Bid in $" v-model="bidAmount" mask="####"></v-text-field>
@@ -66,7 +66,8 @@ export default {
         { text: "Travel Date", prop: "travelDate" },
         { text: "Posted By", prop: "owner" },
         { text: "Passengers Allowed", prop: "passengers" },
-        { text: "Additional Info", prop: "additionalNote" }
+        { text: "Additional Info", prop: "additionalNote" },
+        { text: "Ad Status", prop: "adStatus" }
       ]
     };
   },
@@ -119,6 +120,9 @@ export default {
     }
   },
   computed: {
+    disableBtn() {
+      return this.currentAd.adStatus === "onGoing" ? false : true;
+    },
     currentAd() {
       return this.$store.state.currentSingleAd;
     },

@@ -13,13 +13,13 @@
     <v-btn @click="checkLoginStatus">Place a Bid</v-btn>
     <v-dialog v-model="placeBidDialog" max-width="500" persistent>
       <v-card class="pa-3">
-        <v-car-text v-if="successful===true" class="text-xs-center">
+        <v-card-text v-if="successful===true" class="text-xs-center">
           <div class="text-xs-center pb-3"><v-icon dark x-large color="green">check_circle</v-icon></div>
           <h3>Your Bid was posted successfully!</h3>
           <div><v-btn class="orange mt-3" @click="closeDialogBox">Close</v-btn></div>
-        </v-car-text>
+        </v-card-text>
         <v-card-text v-else>
-          <v-text-field label="Enter a Bid in $" v-model="bidPrice"></v-text-field>
+          <v-text-field label="Enter a Bid in $" v-model="bidPrice" mask="#####"></v-text-field>
           <v-btn class="orange" @click="submitBid" :loading="loadingIcon">Submit</v-btn>
           <v-btn @click="closeDialogBox" class="orange">Close</v-btn>
         </v-card-text>

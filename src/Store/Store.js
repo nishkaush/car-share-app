@@ -1,10 +1,15 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import { sessionIsValid } from "./../utils/utils";
+import decode from "jwt-decode";
+import { sessionIsValid, getIdToken } from "./../utils/utils";
+
 Vue.use(Vuex);
 
 let loggedInValue = sessionIsValid() ? true : false;
+let decodedToken = getIdToken() ? decode(getIdToken()) : null;
+let currentUser = decodedToken ? decodedToken.name : null;
+
 export const store = new Vuex.Store({
   state: {
     loggedIn: loggedInValue,
@@ -12,8 +17,9 @@ export const store = new Vuex.Store({
     bidsForSingleAd: [],
     userAdsArr: [],
     currentSingleAd: "",
-    loggedInUser: "",
+    loggedInUser: currentUser,
     bidsForAdArr: [],
+    allBidsForSingleUser: [],
     LastEvaluatedKey: "nothing"
   },
   mutations: {
@@ -40,6 +46,9 @@ export const store = new Vuex.Store({
     },
     updateBidsForSingleAd(state, payload) {
       state.bidsForSingleAd = payload.arr;
+    },
+    setAllBidsForSingleUser(state, payload) {
+      state.allBidsForSingleUser = payload.arr;
     }
   },
   actions: {

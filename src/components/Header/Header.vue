@@ -22,7 +22,7 @@
         <v-flex v-for="item in headerOptions" :key="item.text" v-if="loginStatus===true">
           <v-btn 
           large class="orange" 
-          @click="item.path!=='/'?$router.push(item.path):logout(item.path)"
+          @click="item.path!=='/'?changeRoute(item.path):logout(item.path)"
           >{{item.text}}</v-btn>
         </v-flex>
       </v-toolbar-items>
@@ -37,13 +37,16 @@ export default {
   data() {
     return {
       headerOptions: [
-        { text: "My Profile", path: "/profile" },
-        { text: "New Listing", path: "/new-listing" },
+        { text: "My Profile", path: "profile" },
+        { text: "New Listing", path: "new-listing" },
         { text: "Logout", path: "/" }
       ]
     };
   },
   methods: {
+    changeRoute(path) {
+      this.$router.push({ path });
+    },
     loginAuthZero() {
       login();
     },

@@ -27,12 +27,13 @@ function allBidsForAd(adId) {
 function fetchAllAds(skip) {
   const myQuery = gql`
     query($skip: Int!) {
-      getAllAds(skip: $skip) {
+      getAllAds(skip: $skip, adStatus: "onGoing") {
         to
         from
         travelDate
         _id
         owner
+        adStatus
       }
     }
   `;
@@ -54,12 +55,14 @@ function getSingleAd(adId) {
         travelDate
         datePosted
         passengers
+        adStatus
         additionalNote
       }
     }
   `;
   return apolloClient.query({
     query: myQuery,
+    fetchPolicy: "network-only",
     variables: {
       id: adId
     }
